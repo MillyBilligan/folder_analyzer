@@ -1,25 +1,23 @@
 import os
-from extensions import ext
+from texts import ext, commands
+from admin import commands_handler
 
 
 
 def get_path():
-    # getting path
 
-    print("path's example - C:/Users/example")
-    path = input('enter path: ')
-    return path
-
-
-def try_open(path):
-    # checking if path is valid
-
-    try: 
-        os.startfile(path)
-        return True
+    print("path's example 'C:/Users/user'")
     
-    except FileNotFoundError:
-        return False
+    while True:
+        path = input('enter path: ')
+        try: 
+            os.startfile(path)
+            return path
+    
+        except FileNotFoundError:
+             pass
+            
+
 
 
 def analyze_folder(items):
@@ -56,29 +54,24 @@ def analyze_folder(items):
     return result
 
 
+
 def main():
 
-    path = None
-    files = [] # items in path's directory
+    print(commands['start_message'])
 
-    # getting valid path
     while True:
-        path = get_path()
+        inp = input()
+        command = commands_handler(inp)
 
-        if try_open(path):
-            break
-        else:
-            print('path is not valid')
+        if command:
+            path = get_path()
+            files = os.listdir(path)
 
-    # getting directory items
-    files = os.listdir(path)
+            analyzed = analyze_folder(files)
 
-    # doing some magic ///\\\
-    analyzed = analyze_folder(files)
-    analyzed_keys = list(analyzed.keys())
+            print(analyzed)
 
-    # printing result
-    print(*[f'{key}: {analyzed[key]}' for key in analyzed_keys], sep='\n')
+                
 
 
 if __name__ == '__main__':
